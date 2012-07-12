@@ -1,0 +1,906 @@
+/*
+ * CadastroMostruario.java
+ *
+ * Created on 4 de Setembro de 2011, 22:34
+ */
+
+package View;
+
+import Relatorio.*;
+import java.awt.AWTKeyStroke;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.ButtonGroup;
+import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
+import Controle.*;
+import Modelo.*;
+import org.lavieri.modelutil.cep.WebServiceCep;
+import java.sql.SQLException;
+import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.text.MaskFormatter;
+import Controle.*;
+import Modelo.*;
+/**
+ *
+ * @author  Familia-Silva
+ */
+public class CadastroMostruario_1_1 extends javax.swing.JFrame {
+    MaskFormatter FormatoData;
+    private int iniciacombo=0;
+    final DefaultTableModel model = new DefaultTableModel();
+    private conexao con_vendedor, con_cor, con_produto, con_saldo, con_mostruario, con_cliente, con_fechamento;
+    private int numeroRegistros=1;
+    
+    
+    /** Creates new form CadastroMostruario */
+    public CadastroMostruario_1_1() throws SQLException {
+        initComponents();
+        
+        lblcodcor.setVisible(false);
+        lblcodproduto.setVisible(false);
+        con_saldo = new conexao();
+        con_saldo.conecta();
+        
+        con_vendedor = new conexao();
+        con_vendedor.conecta();
+        
+        con_cliente= new conexao();
+        con_cliente.conecta();
+        
+        con_cor=new conexao();
+        con_cor.conecta();
+        
+        con_produto=new conexao();
+        con_produto.conecta();
+        
+        setResizable(false);
+        con_mostruario = new conexao();
+        con_cliente.executeSQL("Select c.cd_terceirizada, c.cd_cpf_terceirizada, c.nm_contato, t.*, en.*, e.nm_email1 FROM Terceirizada c Left Join Telefone t ON (c.cd_terceirizada=t.cd_terceirizada) left join email e on (c.cd_terceirizada=e.cd_terceirizada) left join endereco en on (c.cd_terceirizada=en.cd_terceirizada) order by nm_contato");
+        con_fechamento= new conexao();
+        con_fechamento.conecta();
+        con_fechamento.executeSQL("Select  f.*, t.nm_contato, c.nm_cor,p.nm_produto FROM fechprod as f natural join Terceirizada as t natural join Cor  as c natural join Produto as p order by cd_numlote1");
+        
+        
+        preenchejTabla1();
+        enter();
+        Runtime rt = Runtime.getRuntime();
+		int MB = 1048576; // total de bytes em 1MB
+
+		double total = rt.maxMemory() / MB;
+		double inicio = total - (carregarMemoria()/MB);
+		
+		//System.out.println(total);
+		//System.out.println(inicio);
+		
+		// Metodo de limpaza
+		rt.runFinalization();
+		rt.gc();
+		
+		double fim = total - rt.freeMemory()/ MB;
+		System.out.println("Início = " +inicio + "Fim = " + fim);
+    }
+    
+    public void enter(){
+// Enter simula tecla Tab
+        HashSet conj = new HashSet(getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS));
+        conj.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_ENTER, 0));
+        setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, conj);
+    }
+    public void preenchejTabla1(){
+        final DefaultTableModel modelo = (DefaultTableModel)jTable1.getModel();
+        
+        
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(45);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(45);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(146);
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(35);
+        jTable1.getColumnModel().getColumn(4).setPreferredWidth(156);
+        jTable1.getColumnModel().getColumn(5).setPreferredWidth(45);
+        jTable1.getColumnModel().getColumn(6).setPreferredWidth(36);
+        jTable1.getColumnModel().getColumn(7).setPreferredWidth(36);
+        jTable1.getColumnModel().getColumn(8).setPreferredWidth(36);
+        jTable1.getColumnModel().getColumn(9).setPreferredWidth(36);
+        jTable1.getColumnModel().getColumn(10).setPreferredWidth(36);
+        jTable1.getColumnModel().getColumn(11).setPreferredWidth(55);
+        
+        // modelo.addRow(new Object []{"a",0,0,0,0,0,0,0,0,0,0,0});
+        modelo.setNumRows(0);
+    }
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        btninserir = new javax.swing.JButton();
+        btnsalvar = new javax.swing.JButton();
+        btnlimpar = new javax.swing.JButton();
+        btnsair = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        txtcodigo1 = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtnome = new javax.swing.JTextField();
+        jPanel3 = new javax.swing.JPanel();
+        try
+        {
+            FormatoData = new MaskFormatter("##/##/####");
+        }
+        catch (Exception erro)
+        {
+            JOptionPane.showMessageDialog(null, "Não foi possível gerar máscara, erro = " +erro);
+        }
+
+        ftxtenvio = new JFormattedTextField (FormatoData);
+        jLabel10 = new javax.swing.JLabel();
+        try
+        {
+            FormatoData = new MaskFormatter("##/##/####");
+        }
+        catch (Exception erro)
+        {
+            JOptionPane.showMessageDialog(null, "Não foi possível gerar máscara, erro = " +erro);
+        }
+
+        ftxtdevolucao = new JFormattedTextField (FormatoData);
+        jLabel11 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        txtequipamento = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        try
+        {
+            FormatoData = new MaskFormatter("##/##/####");
+        }
+        catch (Exception erro)
+        {
+            JOptionPane.showMessageDialog(null, "Não foi possível gerar máscara, erro = " +erro);
+        }
+
+        ftxtedevolucao = new JFormattedTextField (FormatoData);
+        try
+        {
+            FormatoData = new MaskFormatter("##/##/####");
+        }
+        catch (Exception erro)
+        {
+            JOptionPane.showMessageDialog(null, "Não foi possível gerar máscara, erro = " +erro);
+        }
+
+        ftxtemprestimo = new JFormattedTextField (FormatoData);
+        jLabel13 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtobs = new javax.swing.JTextArea();
+        jPanel7 = new javax.swing.JPanel();
+        lblsaldo = new javax.swing.JLabel();
+        lblcodproduto = new javax.swing.JLabel();
+        lblcodcor = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        txtlote = new javax.swing.JTextField();
+        jPanel8 = new javax.swing.JPanel();
+        lblsaldo1 = new javax.swing.JLabel();
+
+        getContentPane().setLayout(null);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Consulta Fechamento Produto");
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Item", "Cod1", "Produto (A)", "Cod2", "Cor", "P", "M", "G", "GG", "EG", "EXG", "P. Unit."
+            }
+        ));
+        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        jTable1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTable1FocusGained(evt);
+            }
+        });
+
+        jScrollPane2.setViewportView(jTable1);
+
+        getContentPane().add(jScrollPane2);
+        jScrollPane2.setBounds(10, 230, 710, 130);
+
+        btninserir.setFont(new java.awt.Font("Tahoma", 1, 12));
+        btninserir.setText("Consulta");
+        btninserir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btninserirActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(btninserir);
+        btninserir.setBounds(10, 370, 90, 30);
+
+        btnsalvar.setFont(new java.awt.Font("Tahoma", 1, 12));
+        btnsalvar.setText("Salvar");
+        btnsalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnsalvarActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(btnsalvar);
+        btnsalvar.setBounds(110, 370, 80, 30);
+
+        btnlimpar.setFont(new java.awt.Font("Tahoma", 1, 12));
+        btnlimpar.setText("Limpar");
+        btnlimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnlimparActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(btnlimpar);
+        btnlimpar.setBounds(200, 370, 80, 30);
+
+        btnsair.setFont(new java.awt.Font("Tahoma", 1, 12));
+        btnsair.setText("Sair");
+        btnsair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnsairActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(btnsair);
+        btnsair.setBounds(290, 370, 80, 30);
+
+        jPanel2.setLayout(null);
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Terceirizada"));
+        txtcodigo1.setEditable(false);
+        jPanel2.add(txtcodigo1);
+        txtcodigo1.setBounds(10, 40, 50, 20);
+
+        jLabel1.setText("C\u00f3digo");
+        jPanel2.add(jLabel1);
+        jLabel1.setBounds(10, 20, 50, 14);
+
+        jLabel4.setText("Nome");
+        jPanel2.add(jLabel4);
+        jLabel4.setBounds(70, 20, 50, 14);
+
+        txtnome.setEditable(false);
+        jPanel2.add(txtnome);
+        txtnome.setBounds(70, 40, 250, 20);
+
+        getContentPane().add(jPanel2);
+        jPanel2.setBounds(110, 10, 330, 70);
+
+        jPanel3.setLayout(null);
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Datas"));
+        ftxtenvio.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                ftxtenvioFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                ftxtenvioFocusLost(evt);
+            }
+        });
+
+        jPanel3.add(ftxtenvio);
+        ftxtenvio.setBounds(10, 40, 80, 20);
+
+        jLabel10.setText("Envio");
+        jPanel3.add(jLabel10);
+        jLabel10.setBounds(10, 20, 60, 14);
+
+        ftxtdevolucao.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                ftxtdevolucaoFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                ftxtdevolucaoFocusLost(evt);
+            }
+        });
+
+        jPanel3.add(ftxtdevolucao);
+        ftxtdevolucao.setBounds(100, 40, 80, 20);
+
+        jLabel11.setText("Devolu\u00e7\u00e3o");
+        jPanel3.add(jLabel11);
+        jLabel11.setBounds(100, 20, 60, 14);
+
+        getContentPane().add(jPanel3);
+        jPanel3.setBounds(440, 10, 190, 70);
+
+        jPanel4.setLayout(null);
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Equipamento Empr\u00e9stimo"));
+        jPanel4.add(txtequipamento);
+        txtequipamento.setBounds(10, 50, 170, 20);
+
+        jLabel3.setText("Tipo Equipamento");
+        jPanel4.add(jLabel3);
+        jLabel3.setBounds(10, 30, 150, 14);
+
+        ftxtedevolucao.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                ftxtedevolucaoFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                ftxtedevolucaoFocusLost(evt);
+            }
+        });
+
+        jPanel4.add(ftxtedevolucao);
+        ftxtedevolucao.setBounds(100, 100, 80, 20);
+
+        ftxtemprestimo.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                ftxtemprestimoFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                ftxtemprestimoFocusLost(evt);
+            }
+        });
+
+        jPanel4.add(ftxtemprestimo);
+        ftxtemprestimo.setBounds(10, 100, 80, 20);
+
+        jLabel13.setText("Envio");
+        jPanel4.add(jLabel13);
+        jLabel13.setBounds(10, 80, 60, 14);
+
+        jLabel12.setText("Devolu\u00e7\u00e3o");
+        jPanel4.add(jLabel12);
+        jLabel12.setBounds(100, 80, 60, 14);
+
+        getContentPane().add(jPanel4);
+        jPanel4.setBounds(280, 80, 190, 140);
+
+        jPanel1.setLayout(null);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Observa\u00e7\u00e3o"));
+        txtobs.setColumns(20);
+        txtobs.setRows(5);
+        jScrollPane1.setViewportView(txtobs);
+
+        jPanel1.add(jScrollPane1);
+        jScrollPane1.setBounds(7, 15, 250, 110);
+
+        getContentPane().add(jPanel1);
+        jPanel1.setBounds(10, 80, 270, 140);
+
+        jPanel7.setLayout(null);
+
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("V. Total"));
+        lblsaldo.setFont(new java.awt.Font("Tahoma", 1, 14));
+        lblsaldo.setText("0.00");
+        jPanel7.add(lblsaldo);
+        lblsaldo.setBounds(10, 30, 60, 17);
+
+        getContentPane().add(jPanel7);
+        jPanel7.setBounds(470, 150, 80, 70);
+
+        lblcodproduto.setText("jLabel2");
+        getContentPane().add(lblcodproduto);
+        lblcodproduto.setBounds(520, 100, 34, 14);
+
+        lblcodcor.setText("jLabel2");
+        getContentPane().add(lblcodcor);
+        lblcodcor.setBounds(540, 140, 34, 14);
+
+        jPanel5.setLayout(null);
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("N\u00ba Lote"));
+        txtlote.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtloteKeyTyped(evt);
+            }
+        });
+
+        jPanel5.add(txtlote);
+        txtlote.setBounds(20, 30, 60, 20);
+
+        getContentPane().add(jPanel5);
+        jPanel5.setBounds(10, 10, 100, 70);
+
+        jPanel8.setLayout(null);
+
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("T. Pe\u00e7as"));
+        lblsaldo1.setFont(new java.awt.Font("Tahoma", 1, 14));
+        lblsaldo1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblsaldo1.setText("0");
+        jPanel8.add(lblsaldo1);
+        lblsaldo1.setBounds(10, 30, 60, 17);
+
+        getContentPane().add(jPanel8);
+        jPanel8.setBounds(550, 150, 80, 70);
+
+        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds((screenSize.width-735)/2, (screenSize.height-449)/2, 735, 449);
+    }// </editor-fold>//GEN-END:initComponents
+ public static long carregarMemoria(){
+		
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for(int i = 0; i<1000000; i++){
+		list.add(i);	
+		}
+		return Runtime.getRuntime().freeMemory();
+	}   
+    private void txtloteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtloteKeyTyped
+// TODO add your handling code here:
+        // Só aceita numero
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtloteKeyTyped
+    
+    private void ftxtemprestimoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtemprestimoFocusLost
+// TODO add your handling code here:
+    }//GEN-LAST:event_ftxtemprestimoFocusLost
+    
+    private void ftxtemprestimoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtemprestimoFocusGained
+// TODO add your handling code here:
+    }//GEN-LAST:event_ftxtemprestimoFocusGained
+    
+    private void ftxtedevolucaoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtedevolucaoFocusLost
+// TODO add your handling code here:
+    }//GEN-LAST:event_ftxtedevolucaoFocusLost
+    
+    private void ftxtedevolucaoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtedevolucaoFocusGained
+// TODO add your handling code here:
+    }//GEN-LAST:event_ftxtedevolucaoFocusGained
+    
+    private void ftxtdevolucaoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtdevolucaoFocusLost
+// TODO add your handling code here:
+        Pattern p = Pattern
+                .compile("^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[1,3-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|-|\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$");
+        Matcher m = p.matcher(ftxtdevolucao.getText());
+        if (!m.find())
+            
+            JOptionPane.showMessageDialog(null, "Data inválida.");
+        // ftxtdata1.setText("");
+    }//GEN-LAST:event_ftxtdevolucaoFocusLost
+    
+    private void ftxtdevolucaoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtdevolucaoFocusGained
+// TODO add your handling code here:
+        ftxtenvio.selectAll();
+    }//GEN-LAST:event_ftxtdevolucaoFocusGained
+    
+    private void ftxtenvioFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtenvioFocusLost
+// TODO add your handling code here:
+        Pattern p = Pattern
+                .compile("^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[1,3-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|-|\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$");
+        Matcher m = p.matcher(ftxtenvio.getText());
+        if (!m.find())
+            
+            JOptionPane.showMessageDialog(null, "Data inválida.");
+        // ftxtdata1.setText("");
+    }//GEN-LAST:event_ftxtenvioFocusLost
+    
+    private void ftxtenvioFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtenvioFocusGained
+// TODO add your handling code here:
+        ftxtenvio.selectAll();
+    }//GEN-LAST:event_ftxtenvioFocusGained
+    
+    private void btnsairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsairActionPerformed
+// TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btnsairActionPerformed
+    
+    private void btnlimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlimparActionPerformed
+// TODO add your handling code here:
+        //cmbnome.setSelectedIndex(0);
+        txtcodigo1.setText("");
+        txtobs.setBackground(getBackground().white);
+        ftxtdevolucao.setBackground(getBackground().white);
+        txtequipamento.setBackground(getBackground().white);
+        ftxtedevolucao.setBackground(getBackground().white);
+        txtnome.setText("");
+        txtlote.setText("");
+        txtlote.requestFocus();
+        lblsaldo.setText("0.00");
+        lblsaldo1.setText("0");
+        txtobs.setText("");
+        txtequipamento.setText("");
+        ftxtdevolucao.setText("");
+        ftxtemprestimo.setText("");
+        ftxtenvio.setText("");
+        ftxtedevolucao.setText("");
+        lblsaldo.setText("0.00");
+        numeroRegistros=1;
+        ((DefaultTableModel) jTable1.getModel()).setNumRows(0);
+        jTable1.updateUI();
+        
+        
+        
+    }//GEN-LAST:event_btnlimparActionPerformed
+    
+    private void btnsalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsalvarActionPerformed
+// TODO add your handling code here:
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+        Date data = null;
+        Date data1 = null;
+        Date data2 = null;
+        
+        try {
+            data = (Date) fmt.parse(ftxtdevolucao.getText());
+            
+            
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        try {
+            
+            data1 = (Date) fmt.parse(ftxtedevolucao.getText());
+            
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        
+        try {
+            
+            
+            String sql = "UPDATE FechProd SET nm_observacao='" + txtobs.getText().toUpperCase()
+            + "', nm_eqpto='" + txtequipamento.getText().toUpperCase() + "', dt_vevollote='"
+                    + data + "',  dt_devequpto='"
+                    + data1 + "' where cd_numlote1 = '"
+                    + Integer.parseInt(txtlote.getText()) +"'";
+            
+            
+            con_cliente.statement.executeUpdate(sql);
+            
+            
+            con_cliente.executeSQL("Select  f.*, t.nm_contato, c.nm_cor,p.nm_produto FROM fechprod as f natural join Terceirizada as t natural join Cor  as c natural join Produto as p");
+            con_cliente.resultset.next();
+            con_cliente.conecta();
+            con_cliente.executeSQL("Select c.cd_terceirizada, c.cd_cpf_terceirizada, c.nm_contato, t.*, en.*, e.nm_email1 FROM Terceirizada c Left Join Telefone t ON (c.cd_terceirizada=t.cd_terceirizada) left join email e on (c.cd_terceirizada=e.cd_terceirizada) left join endereco en on (c.cd_terceirizada=en.cd_terceirizada) order by nm_contato");
+            
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        JOptionPane.showMessageDialog(null, "Alteração realizada com sucesso!!!");
+        String nome = "Deseja imprimir alterções  do lote: "+Integer.parseInt(txtlote.getText())+"?";
+        int opcao_escolha = JOptionPane.showConfirmDialog(null,nome,"Imprimir", JOptionPane.YES_NO_OPTION);
+        if(opcao_escolha==JOptionPane.YES_OPTION){
+           new Rel_Envio_Fech_Prod_1();
+            
+            con_cliente.conecta();
+            con_cliente.executeSQL("Select c.cd_terceirizada, c.cd_cpf_terceirizada, c.nm_contato, t.*, en.*, e.nm_email1 FROM Terceirizada c Left Join Telefone t ON (c.cd_terceirizada=t.cd_terceirizada) left join email e on (c.cd_terceirizada=e.cd_terceirizada) left join endereco en on (c.cd_terceirizada=en.cd_terceirizada) order by nm_contato");
+            con_fechamento.conecta();
+            con_fechamento.executeSQL("Select  f.*, t.nm_contato, c.nm_cor,p.nm_produto FROM fechprod as f natural join Terceirizada as t natural join Cor  as c natural join Produto as p order by cd_numlote");
+            
+            
+           
+            txtobs.setBackground(getBackground().white);
+            ftxtdevolucao.setBackground(getBackground().white);
+            txtequipamento.setBackground(getBackground().white);
+            ftxtedevolucao.setBackground(getBackground().white);
+            txtnome.setText("");
+            txtlote.setText("");
+            txtlote.requestFocus();
+            lblsaldo.setText("0.00");
+            lblsaldo1.setText("0");
+            txtobs.setText("");
+            txtequipamento.setText("");
+            ftxtdevolucao.setText("");
+            ftxtemprestimo.setText("");
+            ftxtenvio.setText("");
+            ftxtedevolucao.setText("");
+            lblsaldo.setText("0.00");
+            numeroRegistros=1;
+            ((DefaultTableModel) jTable1.getModel()).setNumRows(0);
+            jTable1.updateUI();
+             txtcodigo1.setText("");
+            
+            
+        } else{
+txtcodigo1.setText("");
+            txtobs.setBackground(getBackground().white);
+            ftxtdevolucao.setBackground(getBackground().white);
+            txtequipamento.setBackground(getBackground().white);
+            ftxtedevolucao.setBackground(getBackground().white);
+            txtnome.setText("");
+            txtlote.setText("");
+            txtlote.requestFocus();
+            lblsaldo.setText("0.00");
+            txtobs.setText("");
+            txtequipamento.setText("");
+            ftxtdevolucao.setText("");
+            ftxtemprestimo.setText("");
+            ftxtenvio.setText("");
+            ftxtedevolucao.setText("");
+            lblsaldo.setText("0.00");
+            numeroRegistros=1;
+            ((DefaultTableModel) jTable1.getModel()).setNumRows(0);
+            jTable1.updateUI();
+        }
+        
+    }//GEN-LAST:event_btnsalvarActionPerformed
+    public void preenchejTablaMostruario(){
+        final DefaultTableModel modelo = (DefaultTableModel)jTable1.getModel();
+       jTable1.getColumnModel().getColumn(0).setPreferredWidth(45);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(45);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(146);
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(35);
+        jTable1.getColumnModel().getColumn(4).setPreferredWidth(156);
+        jTable1.getColumnModel().getColumn(5).setPreferredWidth(45);
+        jTable1.getColumnModel().getColumn(6).setPreferredWidth(36);
+        jTable1.getColumnModel().getColumn(7).setPreferredWidth(36);
+        jTable1.getColumnModel().getColumn(8).setPreferredWidth(36);
+        jTable1.getColumnModel().getColumn(9).setPreferredWidth(36);
+        jTable1.getColumnModel().getColumn(10).setPreferredWidth(36);
+        jTable1.getColumnModel().getColumn(11).setPreferredWidth(55);
+        
+        txtobs.setBackground(getBackground().yellow);
+        ftxtdevolucao.setBackground(getBackground().yellow);
+        txtequipamento.setBackground(getBackground().yellow);
+        ftxtedevolucao.setBackground(getBackground().yellow);
+        // modelo.setNumRows(0);
+        // numeroRegistros=1;
+        
+        try {
+            con_produto= new conexao();
+            con_produto.conecta();
+            con_produto.executeSQL("Select  f.*, t.nm_contato, c.nm_cor,p.nm_produto FROM fechprod as f natural join Terceirizada as t natural join Cor  as c natural join Produto as p where cd_numlote1='"
+                    + txtlote.getText() + "'order by cd_numlote1");
+            
+            while(con_produto.resultset.next())
+                
+                
+                modelo.addRow(new Object []{numeroRegistros++,con_produto.resultset.getString("cd_produto"), con_produto.resultset.getString("nm_produto"),con_produto.resultset.getString("cd_cor"),con_produto.resultset.getString("nm_cor"),con_produto.resultset.getString("qt_p"),con_produto.resultset.getString("qt_m"),
+                con_produto.resultset.getString("qt_g"), con_produto.resultset.getString("qt_gg"),con_produto.resultset.getString("qt_eg"),con_produto.resultset.getString("qt_exg"),converterDoubleString(con_produto.resultset.getDouble("vl_unitario"))});
+            // new SimpleDateFormat("dd/MM/yyyy").format(con_produto.resultset.getDate("dt_envio_mostruario")), new SimpleDateFormat("dd/MM/yyyy").format(con_produto.resultset.getDate("dt_devolucao_mostruario")
+            
+        } catch(SQLException erro) {
+            JOptionPane.showMessageDialog(null,"Não localizou dados "+erro);
+            
+            
+        }
+        try {
+            con_produto= new conexao();
+            con_produto.conecta();
+            con_produto.executeSQL("Select  f.*, t.nm_contato, c.nm_cor,p.nm_produto FROM fechprod as f natural join Terceirizada as t natural join Cor  as c natural join Produto as p where cd_numlote1='"
+                    + txtlote.getText() + "'order by cd_numlote1");
+            
+            while(con_produto.resultset.next())
+                txtnome.setText(con_produto.resultset.getString("nm_contato"));
+            
+        } catch(SQLException erro) {
+            JOptionPane.showMessageDialog(null,"Não localizou dados "+erro);
+            
+        }
+        try {
+            con_produto= new conexao();
+            con_produto.conecta();
+            con_produto.executeSQL("Select  f.*, t.nm_contato, c.nm_cor,p.nm_produto FROM fechprod as f natural join Terceirizada as t natural join Cor  as c natural join Produto as p where cd_numlote1='"
+                    + txtlote.getText() + "'order by cd_numlote1");
+            
+            while(con_produto.resultset.next())
+                ftxtenvio.setText(new SimpleDateFormat("dd/MM/yyyy").format(con_produto.resultset.getDate("dt_envlote")));
+            
+        } catch(SQLException erro) {
+            JOptionPane.showMessageDialog(null,"Não localizou dados "+erro);
+            
+        }
+        try {
+            con_produto= new conexao();
+            con_produto.conecta();
+            con_produto.executeSQL("Select  f.*, t.nm_contato, c.nm_cor,p.nm_produto FROM fechprod as f natural join Terceirizada as t natural join Cor  as c natural join Produto as p where cd_numlote1='"
+                    + txtlote.getText() + "'order by cd_numlote1");
+            
+            while(con_produto.resultset.next())
+                ftxtdevolucao.setText(new SimpleDateFormat("dd/MM/yyyy").format(con_produto.resultset.getDate("dt_vevollote")));
+            
+        } catch(SQLException erro) {
+            JOptionPane.showMessageDialog(null,"Não localizou dados "+erro);
+            
+        }
+        try {
+            con_produto= new conexao();
+            con_produto.conecta();
+            con_produto.executeSQL("Select  f.*, t.nm_contato, c.nm_cor,p.nm_produto FROM fechprod as f natural join Terceirizada as t natural join Cor  as c natural join Produto as p where cd_numlote1='"
+                    + txtlote.getText() + "'order by cd_numlote1");
+            
+            while(con_produto.resultset.next())
+                ftxtemprestimo.setText(new SimpleDateFormat("dd/MM/yyyy").format(con_produto.resultset.getDate("dt_envequpto")));
+            
+        } catch(SQLException erro) {
+            JOptionPane.showMessageDialog(null,"Não localizou dados "+erro);
+            
+        }
+        try {
+            con_produto= new conexao();
+            con_produto.conecta();
+            con_produto.executeSQL("Select  f.*, t.nm_contato, c.nm_cor,p.nm_produto FROM fechprod as f natural join Terceirizada as t natural join Cor  as c natural join Produto as p where cd_numlote1='"
+                    + txtlote.getText() + "'order by cd_numlote1");
+            
+            while(con_produto.resultset.next())
+                ftxtedevolucao.setText(new SimpleDateFormat("dd/MM/yyyy").format(con_produto.resultset.getDate("dt_devequpto")));
+            
+        } catch(SQLException erro) {
+            JOptionPane.showMessageDialog(null,"Não localizou dados "+erro);
+            
+        }
+        try {
+            con_produto= new conexao();
+            con_produto.conecta();
+            con_produto.executeSQL("Select  f.*, t.nm_contato, c.nm_cor,p.nm_produto FROM fechprod as f natural join Terceirizada as t natural join Cor  as c natural join Produto as p where cd_numlote1='"
+                    + txtlote.getText() + "'order by cd_numlote1");
+            
+            while(con_produto.resultset.next())
+                txtobs.setText(con_produto.resultset.getString("nm_observacao"));
+            
+        } catch(SQLException erro) {
+            JOptionPane.showMessageDialog(null,"Não localizou dados "+erro);
+            
+        }
+        try {
+            con_produto= new conexao();
+            con_produto.conecta();
+            con_produto.executeSQL("Select  f.*, t.nm_contato, c.nm_cor,p.nm_produto FROM fechprod as f natural join Terceirizada as t natural join Cor  as c natural join Produto as p where cd_numlote1='"
+                    + txtlote.getText() + "'order by cd_numlote1");
+            
+            while(con_produto.resultset.next())
+                txtequipamento.setText(con_produto.resultset.getString("nm_eqpto"));
+            
+        } catch(SQLException erro) {
+            JOptionPane.showMessageDialog(null,"Não localizou dados "+erro);
+            
+        }
+         try {
+            con_produto= new conexao();
+            con_produto.conecta();
+            con_produto.executeSQL("Select  f.*, t.nm_contato, c.nm_cor,p.nm_produto FROM fechprod as f natural join Terceirizada as t natural join Cor  as c natural join Produto as p where cd_numlote1='"
+                    + txtlote.getText() + "'order by cd_numlote1");
+            
+            while(con_produto.resultset.next())
+                lblsaldo1.setText(con_produto.resultset.getString("qt_peca"));
+            
+        } catch(SQLException erro) {
+            JOptionPane.showMessageDialog(null,"Não localizou dados "+erro);
+            
+        }
+        try {
+            con_produto= new conexao();
+            con_produto.conecta();
+            con_produto.executeSQL("Select  f.*, t.nm_contato, c.nm_cor,p.nm_produto FROM fechprod as f natural join Terceirizada as t natural join Cor  as c natural join Produto as p where cd_numlote1='"
+                    + txtlote.getText() + "'order by cd_numlote1");
+            
+            while(con_produto.resultset.next())
+                lblsaldo.setText((String.valueOf(converterDoubleString(con_produto.resultset.getDouble("vl_total")))));
+            
+        } catch(SQLException erro) {
+            JOptionPane.showMessageDialog(null,"Não localizou dados "+erro);
+            
+        }
+        try {
+            con_produto= new conexao();
+            con_produto.conecta();
+            con_produto.executeSQL("Select  f.*, t.nm_contato, c.nm_cor,p.nm_produto FROM fechprod as f natural join Terceirizada as t natural join Cor  as c natural join Produto as p where cd_numlote1='"
+                    + txtlote.getText() + "'order by cd_numlote1");
+            
+            while(con_produto.resultset.next())
+                txtcodigo1.setText((con_produto.resultset.getString("cd_terceirizada")));
+            
+        } catch(SQLException erro) {
+            JOptionPane.showMessageDialog(null,"Não localizou dados "+erro);
+            
+        }
+    }
+    
+    private void btnconsultaActionPerformed(java.awt.event.ActionEvent evt) {
+// TODO add your handling code here:
+        
+        if(txtlote.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "Selecione um lote!");
+            txtlote.requestFocus();
+        } else{
+            preenchejTablaMostruario();
+            txtobs.setBackground(getBackground().yellow);
+            ftxtdevolucao.setBackground(getBackground().yellow);
+        }
+        
+        
+    }
+     public static String converterDoubleString(double precoDouble) {  
+   /*Transformando um double em 2 casas decimais*/  
+   DecimalFormat fmt = new DecimalFormat("0.00");    //limita o número de casas decimais     
+   String string = fmt.format(precoDouble);  
+   String[] part = string.split("[,]");  
+   String preco = part[0]+"."+part[1];  
+   return preco;  
+}  
+    private void btninserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btninserirActionPerformed
+// TODO add your handling code here:
+        
+        final DefaultTableModel modelo = (DefaultTableModel)jTable1.getModel();
+        
+        if(txtlote.getText().equals("0.00")){
+            JOptionPane.showMessageDialog(null,"Digite um valor!");
+            txtlote.requestFocus();
+        } else{
+            preenchejTablaMostruario();
+        }
+    }//GEN-LAST:event_btninserirActionPerformed
+    
+    private void jTable1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTable1FocusGained
+// TODO add your handling code here:
+    }//GEN-LAST:event_jTable1FocusGained
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    new CadastroMostruario_1_1().setVisible(true);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+    }
+    
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btninserir;
+    private javax.swing.JButton btnlimpar;
+    private javax.swing.JButton btnsair;
+    private javax.swing.JButton btnsalvar;
+    private javax.swing.JFormattedTextField ftxtdevolucao;
+    private javax.swing.JFormattedTextField ftxtedevolucao;
+    private javax.swing.JFormattedTextField ftxtemprestimo;
+    private javax.swing.JFormattedTextField ftxtenvio;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JLabel lblcodcor;
+    private javax.swing.JLabel lblcodproduto;
+    private javax.swing.JLabel lblsaldo;
+    private javax.swing.JLabel lblsaldo1;
+    private javax.swing.JTextField txtcodigo1;
+    private javax.swing.JTextField txtequipamento;
+    public static javax.swing.JTextField txtlote;
+    private javax.swing.JTextField txtnome;
+    private javax.swing.JTextArea txtobs;
+    // End of variables declaration//GEN-END:variables
+    
+}

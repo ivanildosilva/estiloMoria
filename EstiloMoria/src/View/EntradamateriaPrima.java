@@ -1,0 +1,1303 @@
+/*
+ * CadastroMateriaPrima.java
+ *
+ * Created on 2 de Setembro de 2011, 09:04
+ */
+
+package View;
+
+import java.awt.AWTKeyStroke;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.ButtonGroup;
+import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
+import Controle.*;
+import Modelo.*;
+import org.lavieri.modelutil.cep.WebServiceCep;
+import java.sql.SQLException;
+import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.text.MaskFormatter;
+import Controle.*;
+import Modelo.*;
+
+/**
+ *
+ * @author  Familia-Silva
+ */
+public class EntradamateriaPrima extends javax.swing.JFrame {
+    
+    private Object contador;
+    final DefaultTableModel model = new DefaultTableModel();
+    private conexao con_contapagar,con_contapagar1,con_contapagar2,con_contapagar3,con_contapagar4,con_contapagar5, con_saldo, con_saldo1,con_cor, con_fornecedor ,con_tecido, con_aviamento,con_materia ;
+    private int iniciacombo = 0;
+    private double qtdestoquetinha=0;
+    private double qtdestoquetinha1=0;
+    private double qtdestoquetinha2=0;
+    private int qtdestoquetinha3=0;
+    MaskFormatter FormatoData, FormatoCpf, FormatoCnpj, FormatoCep, FormatoTel1, FormatoTel2, FormatoTel3, FormatoTel4;
+    /** Creates new form CadastroMateriaPrima */
+    public EntradamateriaPrima() {
+        initComponents();
+        
+        con_fornecedor = new conexao();
+        con_fornecedor.conecta();
+        setResizable(false);
+        con_tecido=new conexao();
+        con_tecido.conecta();
+        
+        con_aviamento=new conexao();
+        con_aviamento.conecta();
+        lblcodproduto.setVisible(false);
+        lblcodaviamento.setVisible(false);
+        con_cor=new conexao();
+        con_cor.conecta();
+        
+        con_materia=new conexao();
+        con_materia.conecta();
+        
+        con_saldo=new conexao();
+        con_saldo.conecta();
+        con_saldo1=new conexao();
+        con_saldo1.conecta();
+        
+        con_contapagar=new conexao();
+        con_contapagar.conecta();
+        
+        con_fornecedor.executeSQL("select * from fornecedor order by nm_razaosocial_fornecedor");
+        con_tecido.executeSQL("select * from tecido order by nm_tecido");
+        con_aviamento.executeSQL("select * from aviamento order by nm_aviamento");
+        con_cor.executeSQL("select * from cor order by nm_cor");
+        con_saldo.executeSQL("select * from saldomateriaprima");
+        con_saldo1.executeSQL("select * from saldomateriaprima");
+        
+        try {
+            
+            while(con_tecido.resultset.next()) {
+                //JOptionPane.showMessageDialog(null,con_cliente.resultset.getString("nome"));
+                cmbproduto.addItem(con_tecido.resultset.getString("nm_tecido"));
+            }
+            while(con_aviamento.resultset.next())
+                cmbaviamento.addItem(con_aviamento.resultset.getString("nm_aviamento"));
+            while(con_cor.resultset.next())
+                cmbcor.addItem(con_cor.resultset.getString("nm_cor"));
+            
+            
+        } catch(SQLException erro) {
+            JOptionPane.showMessageDialog(null,"Não localizou dados "+erro);
+        }
+        cmbaviamento.setVisible(false);
+        cmbproduto.setVisible(false);
+        
+        
+        
+        enter();
+        txtpeca1.setVisible(false);
+        txtpeca2.setVisible(false);
+        txtpeca3.setVisible(false);
+        txtkilo1.setVisible(false);
+        txtkilo2.setVisible(false);
+        txtmetro1.setVisible(false);
+        txtmetro2.setVisible(false);
+        txtmetro3.setVisible(false);
+        Runtime rt = Runtime.getRuntime();
+		int MB = 1048576; // total de bytes em 1MB
+
+		double total = rt.maxMemory() / MB;
+		double inicio = total - (carregarMemoria()/MB);
+		
+		//System.out.println(total);
+		//System.out.println(inicio);
+		
+		// Metodo de limpaza
+		rt.runFinalization();
+		rt.gc();
+		
+		double fim = total - rt.freeMemory()/ MB;
+		System.out.println("Início = " +inicio + "Fim = " + fim);
+    }
+ public static long carregarMemoria(){
+		
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for(int i = 0; i<1000000; i++){
+		list.add(i);	
+		}
+		return Runtime.getRuntime().freeMemory();
+	}       
+    
+    
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        GrupoMedida = new javax.swing.ButtonGroup();
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        jPanel1 = new javax.swing.JPanel();
+        cmptipo = new javax.swing.JComboBox();
+        jLabel1 = new javax.swing.JLabel();
+        cmbproduto = new javax.swing.JComboBox();
+        jLabel2 = new javax.swing.JLabel();
+        cmbcor = new javax.swing.JComboBox();
+        jLabel3 = new javax.swing.JLabel();
+        cmbtamanho = new javax.swing.JComboBox();
+        jLabel4 = new javax.swing.JLabel();
+        lbltipoa = new javax.swing.JLabel();
+        lblcodproduto = new javax.swing.JLabel();
+        cmbaviamento = new javax.swing.JComboBox();
+        cmbnula = new javax.swing.JComboBox();
+        lbltipot = new javax.swing.JLabel();
+        lblcodaviamento = new javax.swing.JLabel();
+        lblcodcor = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        rdbmetro = new javax.swing.JRadioButton();
+        rdbkilo = new javax.swing.JRadioButton();
+        rdbpeca = new javax.swing.JRadioButton();
+        txtmetro = new javax.swing.JTextField();
+        txtkilo = new javax.swing.JTextField();
+        txtpeca = new javax.swing.JTextField();
+        jPanel3 = new javax.swing.JPanel();
+        rdbmetro1 = new javax.swing.JRadioButton();
+        rdbkilo1 = new javax.swing.JRadioButton();
+        rdbpeca1 = new javax.swing.JRadioButton();
+        txtmetro1 = new javax.swing.JTextField();
+        txtkilo1 = new javax.swing.JTextField();
+        txtpeca1 = new javax.swing.JTextField();
+        txtmetro2 = new javax.swing.JTextField();
+        txtkilo2 = new javax.swing.JTextField();
+        txtpeca2 = new javax.swing.JTextField();
+        txtpeca3 = new javax.swing.JTextField();
+        txtmetro3 = new javax.swing.JTextField();
+        btncadastrar = new java.awt.Button();
+        btnlimpar = new java.awt.Button();
+        btnsair = new java.awt.Button();
+
+        getContentPane().setLayout(null);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Entrada Materia Prima");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
+
+        jPanel1.setLayout(null);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados"));
+        cmptipo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-", "Aviamento", "Tecido" }));
+        cmptipo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmptipoItemStateChanged(evt);
+            }
+        });
+        cmptipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmptipoActionPerformed(evt);
+            }
+        });
+
+        jPanel1.add(cmptipo);
+        cmptipo.setBounds(10, 40, 90, 20);
+
+        jLabel1.setText("Tipo");
+        jPanel1.add(jLabel1);
+        jLabel1.setBounds(10, 20, 50, 14);
+
+        cmbproduto.setMaximumRowCount(5);
+        cmbproduto.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbprodutoItemStateChanged(evt);
+            }
+        });
+        cmbproduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbprodutoActionPerformed(evt);
+            }
+        });
+
+        jPanel1.add(cmbproduto);
+        cmbproduto.setBounds(110, 40, 310, 20);
+
+        jLabel2.setText("Produto");
+        jPanel1.add(jLabel2);
+        jLabel2.setBounds(110, 20, 50, 14);
+
+        cmbcor.setMaximumRowCount(5);
+        cmbcor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbcorActionPerformed(evt);
+            }
+        });
+        cmbcor.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cmbcorFocusLost(evt);
+            }
+        });
+
+        jPanel1.add(cmbcor);
+        cmbcor.setBounds(10, 100, 280, 20);
+
+        jLabel3.setText("Cor");
+        jPanel1.add(jLabel3);
+        jLabel3.setBounds(10, 80, 50, 14);
+
+        cmbtamanho.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-", "PEQUENO", "M\u00c9DIO", "GRANDE" }));
+        cmbtamanho.setEnabled(false);
+        cmbtamanho.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cmbtamanhoFocusLost(evt);
+            }
+        });
+
+        jPanel1.add(cmbtamanho);
+        cmbtamanho.setBounds(300, 100, 120, 20);
+
+        jLabel4.setText("Tamanho");
+        jPanel1.add(jLabel4);
+        jLabel4.setBounds(300, 80, 70, 14);
+
+        lbltipoa.setText("tipoa");
+        jPanel1.add(lbltipoa);
+        lbltipoa.setBounds(40, 40, 40, 14);
+
+        lblcodproduto.setText("produto");
+        jPanel1.add(lblcodproduto);
+        lblcodproduto.setBounds(170, 40, 40, 14);
+
+        cmbaviamento.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbaviamentoItemStateChanged(evt);
+            }
+        });
+        cmbaviamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbaviamentoActionPerformed(evt);
+            }
+        });
+
+        jPanel1.add(cmbaviamento);
+        cmbaviamento.setBounds(110, 40, 150, 20);
+
+        cmbnula.setMaximumRowCount(5);
+        cmbnula.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-" }));
+        cmbnula.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbnulaItemStateChanged(evt);
+            }
+        });
+        cmbnula.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbnulaActionPerformed(evt);
+            }
+        });
+
+        jPanel1.add(cmbnula);
+        cmbnula.setBounds(110, 40, 310, 20);
+
+        lbltipot.setText("tipot");
+        jPanel1.add(lbltipot);
+        lbltipot.setBounds(50, 40, 40, 14);
+
+        lblcodaviamento.setText("Aviamento");
+        jPanel1.add(lblcodaviamento);
+        lblcodaviamento.setBounds(170, 40, 60, 14);
+
+        lblcodcor.setText("Cor");
+        jPanel1.add(lblcodcor);
+        lblcodcor.setBounds(60, 100, 50, 14);
+
+        jPanel2.setLayout(null);
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Unid. Medida"));
+        GrupoMedida.add(rdbmetro);
+        rdbmetro.setText("Metro");
+        rdbmetro.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        rdbmetro.setEnabled(false);
+        rdbmetro.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        rdbmetro.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rdbmetroItemStateChanged(evt);
+            }
+        });
+
+        jPanel2.add(rdbmetro);
+        rdbmetro.setBounds(20, 30, 60, 15);
+
+        GrupoMedida.add(rdbkilo);
+        rdbkilo.setText("Kilo");
+        rdbkilo.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        rdbkilo.setEnabled(false);
+        rdbkilo.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        rdbkilo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rdbkiloItemStateChanged(evt);
+            }
+        });
+        rdbkilo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdbkiloActionPerformed(evt);
+            }
+        });
+
+        jPanel2.add(rdbkilo);
+        rdbkilo.setBounds(180, 30, 50, 15);
+
+        GrupoMedida.add(rdbpeca);
+        rdbpeca.setText("Pe\u00e7a");
+        rdbpeca.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        rdbpeca.setEnabled(false);
+        rdbpeca.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        rdbpeca.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rdbpecaItemStateChanged(evt);
+            }
+        });
+        rdbpeca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdbpecaActionPerformed(evt);
+            }
+        });
+
+        jPanel2.add(rdbpeca);
+        rdbpeca.setBounds(350, 30, 50, 15);
+
+        txtmetro.setText("0.00");
+        txtmetro.setEnabled(false);
+        txtmetro.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtmetroFocusGained(evt);
+            }
+        });
+        txtmetro.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtmetroKeyReleased(evt);
+            }
+        });
+
+        jPanel2.add(txtmetro);
+        txtmetro.setBounds(20, 50, 40, 20);
+
+        txtkilo.setText("0.00");
+        txtkilo.setEnabled(false);
+        txtkilo.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtkiloFocusGained(evt);
+            }
+        });
+        txtkilo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtkiloKeyReleased(evt);
+            }
+        });
+
+        jPanel2.add(txtkilo);
+        txtkilo.setBounds(180, 50, 40, 20);
+
+        txtpeca.setText("0");
+        txtpeca.setEnabled(false);
+        txtpeca.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtpecaFocusGained(evt);
+            }
+        });
+        txtpeca.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtpecaKeyReleased(evt);
+            }
+        });
+
+        jPanel2.add(txtpeca);
+        txtpeca.setBounds(350, 50, 40, 20);
+
+        jPanel3.setLayout(null);
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Unid. Medida"));
+        GrupoMedida.add(rdbmetro1);
+        rdbmetro1.setText("Metro");
+        rdbmetro1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        rdbmetro1.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        rdbmetro1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rdbmetro1ItemStateChanged(evt);
+            }
+        });
+
+        jPanel3.add(rdbmetro1);
+        rdbmetro1.setBounds(10, 30, 60, 15);
+
+        GrupoMedida.add(rdbkilo1);
+        rdbkilo1.setText("Kilo");
+        rdbkilo1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        rdbkilo1.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        rdbkilo1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdbkilo1ActionPerformed(evt);
+            }
+        });
+
+        jPanel3.add(rdbkilo1);
+        rdbkilo1.setBounds(70, 30, 50, 15);
+
+        GrupoMedida.add(rdbpeca1);
+        rdbpeca1.setText("Pe\u00e7a");
+        rdbpeca1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        rdbpeca1.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        rdbpeca1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdbpeca1ActionPerformed(evt);
+            }
+        });
+
+        jPanel3.add(rdbpeca1);
+        rdbpeca1.setBounds(130, 30, 50, 15);
+
+        txtmetro1.setText("0.00");
+        txtmetro1.setEnabled(false);
+        txtmetro1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtmetro1FocusGained(evt);
+            }
+        });
+        txtmetro1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtmetro1KeyReleased(evt);
+            }
+        });
+
+        jPanel3.add(txtmetro1);
+        txtmetro1.setBounds(10, 50, 40, 20);
+
+        txtkilo1.setText("0.00");
+        txtkilo1.setEnabled(false);
+        txtkilo1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtkilo1FocusGained(evt);
+            }
+        });
+        txtkilo1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtkilo1KeyReleased(evt);
+            }
+        });
+
+        jPanel3.add(txtkilo1);
+        txtkilo1.setBounds(70, 50, 40, 20);
+
+        txtpeca1.setText("0");
+        txtpeca1.setEnabled(false);
+        txtpeca1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtpeca1FocusGained(evt);
+            }
+        });
+        txtpeca1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtpeca1KeyReleased(evt);
+            }
+        });
+
+        jPanel3.add(txtpeca1);
+        txtpeca1.setBounds(130, 50, 40, 20);
+
+        jPanel2.add(jPanel3);
+        jPanel3.setBounds(10, 100, 190, 80);
+
+        txtmetro2.setText("0");
+        txtmetro2.setEnabled(false);
+        txtmetro2.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtmetro2FocusGained(evt);
+            }
+        });
+        txtmetro2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtmetro2KeyReleased(evt);
+            }
+        });
+
+        jPanel2.add(txtmetro2);
+        txtmetro2.setBounds(20, 50, 40, 20);
+
+        txtkilo2.setText("0");
+        txtkilo2.setEnabled(false);
+        txtkilo2.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtkilo2FocusGained(evt);
+            }
+        });
+        txtkilo2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtkilo2KeyReleased(evt);
+            }
+        });
+
+        jPanel2.add(txtkilo2);
+        txtkilo2.setBounds(180, 50, 40, 20);
+
+        txtpeca2.setText("0");
+        txtpeca2.setEnabled(false);
+        txtpeca2.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtpeca2FocusGained(evt);
+            }
+        });
+        txtpeca2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtpeca2KeyReleased(evt);
+            }
+        });
+
+        jPanel2.add(txtpeca2);
+        txtpeca2.setBounds(350, 50, 40, 20);
+
+        txtpeca3.setText("0");
+        txtpeca3.setEnabled(false);
+        txtpeca3.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtpeca3FocusGained(evt);
+            }
+        });
+        txtpeca3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtpeca3KeyReleased(evt);
+            }
+        });
+
+        jPanel2.add(txtpeca3);
+        txtpeca3.setBounds(350, 50, 40, 20);
+
+        txtmetro3.setText("0");
+        txtmetro3.setEnabled(false);
+        txtmetro3.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtmetro3FocusGained(evt);
+            }
+        });
+        txtmetro3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtmetro3KeyReleased(evt);
+            }
+        });
+
+        jPanel2.add(txtmetro3);
+        txtmetro3.setBounds(180, 50, 40, 20);
+
+        jPanel1.add(jPanel2);
+        jPanel2.setBounds(10, 130, 410, 80);
+
+        getContentPane().add(jPanel1);
+        jPanel1.setBounds(10, 10, 430, 220);
+
+        btncadastrar.setFont(new java.awt.Font("Dialog", 1, 12));
+        btncadastrar.setLabel("Cadastrar");
+        btncadastrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btncadastrarActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(btncadastrar);
+        btncadastrar.setBounds(20, 240, 80, 30);
+
+        btnlimpar.setFont(new java.awt.Font("Dialog", 1, 12));
+        btnlimpar.setLabel("Limpar");
+        btnlimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnlimparActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(btnlimpar);
+        btnlimpar.setBounds(130, 240, 80, 30);
+
+        btnsair.setFont(new java.awt.Font("Dialog", 1, 12));
+        btnsair.setLabel("Sair");
+        btnsair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnsairActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(btnsair);
+        btnsair.setBounds(240, 240, 80, 30);
+
+        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds((screenSize.width-456)/2, (screenSize.height-309)/2, 456, 309);
+    }// </editor-fold>//GEN-END:initComponents
+    
+    private void rdbpecaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rdbpecaItemStateChanged
+// TODO add your handling code here:
+        con_saldo = new conexao();
+        con_saldo.conecta();
+        con_saldo.executeSQL("select * from saldomateriaprima");
+    }//GEN-LAST:event_rdbpecaItemStateChanged
+    
+    private void rdbkiloItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rdbkiloItemStateChanged
+// TODO add your handling code here:
+        con_saldo = new conexao();
+        con_saldo.conecta();
+        con_saldo.executeSQL("select * from saldomateriaprima");
+    }//GEN-LAST:event_rdbkiloItemStateChanged
+    
+    private void txtmetro3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtmetro3KeyReleased
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtmetro3KeyReleased
+    
+    private void txtmetro3FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtmetro3FocusGained
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtmetro3FocusGained
+    
+    private void cmbtamanhoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbtamanhoFocusLost
+// TODO add your handling code here:
+        if(cmptipo.getSelectedItem().equals("Aviamento")){
+            try {
+                con_saldo= new conexao();
+                con_saldo.conecta();
+                con_saldo.executeSQL("SELECT qt_metro, qt_peca FROM Saldomateriaprima where cd_aviamento='"
+                        + Integer.parseInt(lblcodaviamento.getText())
+                        + "' and cd_cor = '"
+                        + Integer.parseInt(lblcodcor.getText())
+                        + "' and nm_tamanho = '"
+                        + cmbtamanho.getSelectedItem() + "'");
+                
+                con_saldo.resultset.first();
+                txtmetro3.setText(con_saldo.resultset.getString("qt_metro"));
+                txtpeca3.setText(con_saldo.resultset.getString("qt_peca"));
+                qtdestoquetinha2 = (con_saldo.resultset.getDouble("qt_metro"));
+                qtdestoquetinha3 = (con_saldo.resultset.getInt("qt_peca"));
+                txtmetro3.setText("0");
+                txtpeca3.setText("0");
+                //JOptionPane.showMessageDialog(null,qtdestoquetinha2);
+                //JOptionPane.showMessageDialog(null,qtdestoquetinha3);
+                
+            } catch(SQLException erro) {
+                if(txtmetro3.getText().equals("0") && txtpeca3.getText().equals("0")){
+                    JOptionPane.showMessageDialog(null,"Combinação Aviamento/ Cor/ Tamanho não encontrada.\n   Combinação incluída com sucesso!");
+                    
+                    String sqlinsertsaldo = "INSERT INTO SaldoMateriaPrima (cd_tecido,cd_aviamento,nm_tamanho, qt_metro, qt_kilo,  qt_peca,  cd_cor) VALUES ('"+
+                            0+"','"+
+                            Integer.parseInt(lblcodaviamento.getText())+"','"+
+                            cmbtamanho.getSelectedItem().toString().toUpperCase()+"','"+
+                            0+"','"+
+                            0+"','"+
+                            0+"','"+
+                            Integer.parseInt(lblcodcor.getText())+"')";
+                    try {
+                        con_saldo.statement.executeUpdate(sqlinsertsaldo);
+                        con_saldo.executeSQL("select * from saldomateriaprima");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    
+                    
+                    
+                    
+                    
+                    txtmetro2.setText("0");
+                    txtkilo2.setText("0");
+                }
+            }
+        }
+    }//GEN-LAST:event_cmbtamanhoFocusLost
+    
+    private void txtpeca3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtpeca3KeyReleased
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtpeca3KeyReleased
+    
+    private void txtpeca3FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtpeca3FocusGained
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtpeca3FocusGained
+    
+    private void cmbcorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbcorFocusLost
+// TODO add your handling code here:
+        if(cmptipo.getSelectedItem().equals("Tecido")){
+            try {
+                con_saldo= new conexao();
+                con_saldo.conecta();
+                con_saldo.executeSQL("SELECT qt_metro, qt_kilo FROM Saldomateriaprima where cd_tecido='"
+                        + Integer.parseInt(lblcodproduto.getText())
+                        + "' and cd_cor = '"
+                        + Integer.parseInt(lblcodcor.getText())
+                        + "'");
+                
+                con_saldo.resultset.first();
+                
+                txtmetro2.setText(con_saldo.resultset.getString("qt_metro"));
+                txtkilo2.setText(con_saldo.resultset.getString("qt_kilo"));
+                qtdestoquetinha = (con_saldo.resultset.getDouble("qt_metro"));
+                qtdestoquetinha1 = (con_saldo.resultset.getDouble("qt_kilo"));
+                txtmetro2.setText("0");
+                txtkilo2.setText("0");
+                //JOptionPane.showMessageDialog(null,qtdestoquetinha);
+                //JOptionPane.showMessageDialog(null,qtdestoquetinha1);
+                
+            } catch(SQLException erro) {
+                if(txtmetro2.getText().equals("0") && txtkilo2.getText().equals("0")){
+                    
+                    JOptionPane.showMessageDialog(null,"Combinação Produto/ Cor encontrada.\n   Combinação incluída com sucesso!");
+                    
+                    String sqlinsertsaldo = "INSERT INTO SaldoMateriaPrima (cd_tecido,cd_aviamento,nm_tamanho, qt_metro, qt_kilo,  qt_peca,  cd_cor) VALUES ('"+
+                            Integer.parseInt(lblcodproduto.getText())+"','"+
+                            0+"','"+
+                            ""+"','"+
+                            0+"','"+
+                            0+"','"+
+                            0+"','"+
+                            Integer.parseInt(lblcodcor.getText())+"')";
+                    try {
+                        
+                        con_saldo.statement.executeUpdate(sqlinsertsaldo);
+                        con_saldo.executeSQL("select * from saldomateriaprima");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    
+                    
+                    
+                    
+                    
+                    txtmetro2.setText("0");
+                    txtkilo2.setText("0");
+                }
+            }
+        }
+        
+    }//GEN-LAST:event_cmbcorFocusLost
+    
+    private void txtpeca2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtpeca2KeyReleased
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtpeca2KeyReleased
+    
+    private void txtpeca2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtpeca2FocusGained
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtpeca2FocusGained
+    
+    private void txtkilo2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtkilo2KeyReleased
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtkilo2KeyReleased
+    
+    private void txtkilo2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtkilo2FocusGained
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtkilo2FocusGained
+    
+    private void txtmetro2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtmetro2KeyReleased
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtmetro2KeyReleased
+    
+    private void txtmetro2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtmetro2FocusGained
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtmetro2FocusGained
+    public void enter(){
+// Enter simula tecla Tab
+        HashSet conj = new HashSet(getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS));
+        conj.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_ENTER, 0));
+        setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, conj);
+    }
+    private void cmbcorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbcorActionPerformed
+// TODO add your handling code here:
+        if(iniciacombo == 1){
+            try {
+                
+                con_cor.resultset.first();
+                String igual = "n";
+                while(igual == "n"){
+                    if(con_cor.resultset.getString("nm_cor").equals(cmbcor.getSelectedItem())){
+                        igual = "s";
+                    } else
+                        con_cor.resultset.next();
+                }
+                lblcodcor.setText(con_cor.resultset.getString(String.valueOf("cd_cor")));
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                
+            }
+        }
+        iniciacombo=1;
+        
+    }//GEN-LAST:event_cmbcorActionPerformed
+    
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+// TODO add your handling code here:
+        
+        
+        
+        
+    }//GEN-LAST:event_formWindowOpened
+    
+    private void cmbnulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbnulaActionPerformed
+// TODO add your handling code here:
+    }//GEN-LAST:event_cmbnulaActionPerformed
+    
+    private void cmbnulaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbnulaItemStateChanged
+// TODO add your handling code here:
+    }//GEN-LAST:event_cmbnulaItemStateChanged
+    
+    private void cmbaviamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbaviamentoActionPerformed
+// TODO add your handling code here:
+        if(iniciacombo == 1){
+            try {
+                
+                con_aviamento.resultset.first();
+                String igual = "n";
+                while(igual == "n"){
+                    if(con_aviamento.resultset.getString("nm_aviamento").equals(cmbaviamento.getSelectedItem())){
+                        igual = "s";
+                    } else
+                        con_aviamento.resultset.next();
+                }
+                lblcodaviamento.setText(con_aviamento.resultset.getString(String.valueOf("cd_aviamento")));
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                
+            }
+        }
+        iniciacombo=1;
+        
+        
+    }//GEN-LAST:event_cmbaviamentoActionPerformed
+    
+    private void cmbaviamentoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbaviamentoItemStateChanged
+// TODO add your handling code here:
+        
+    }//GEN-LAST:event_cmbaviamentoItemStateChanged
+    
+    private void cmptipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmptipoActionPerformed
+// TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_cmptipoActionPerformed
+    
+    private void cmbprodutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbprodutoActionPerformed
+// TODO add your handling code here:
+        if(iniciacombo == 1){
+            try {
+                
+                con_tecido.resultset.first();
+                String igual = "n";
+                while(igual == "n"){
+                    if(con_tecido.resultset.getString("nm_tecido").equals(cmbproduto.getSelectedItem())){
+                        igual = "s";
+                    } else
+                        con_tecido.resultset.next();
+                }
+                lblcodproduto.setText(con_tecido.resultset.getString(String.valueOf("cd_tecido")));
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                
+            }
+        }
+        iniciacombo=1;
+    }//GEN-LAST:event_cmbprodutoActionPerformed
+    
+    private void cmbprodutoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbprodutoItemStateChanged
+        
+    }//GEN-LAST:event_cmbprodutoItemStateChanged
+    
+    
+    
+    
+    private void cmptipoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmptipoItemStateChanged
+// TODO add your handling code here:
+        if(cmptipo.getSelectedItem().equals("Aviamento")){
+            lbltipoa.setText("1");
+            lbltipot.setText("0");
+            cmbproduto.setVisible(false);
+            cmbaviamento.setVisible(true);
+            cmbnula.setVisible(false);
+            cmbproduto.setSelectedIndex(0);
+            cmbtamanho.setEnabled(true);
+            cmbtamanho.setSelectedIndex(0);
+            rdbkilo.setEnabled(false);
+            rdbpeca.setEnabled(true);
+            rdbmetro.setEnabled(true);
+        }
+        if(cmptipo.getSelectedItem().equals("Tecido")){
+            lbltipoa.setText("0");
+            lbltipot.setText("1");
+            cmbproduto.setVisible(true);
+            cmbaviamento.setVisible(false);
+            cmbaviamento.setSelectedIndex(0);
+            cmbnula.setVisible(false);
+            cmbtamanho.setEnabled(false);
+            cmbtamanho.setSelectedIndex(0);
+            rdbkilo.setEnabled(true);
+            rdbpeca.setEnabled(false);
+            rdbmetro.setEnabled(true);
+        }
+        if(cmptipo.getSelectedItem().equals("-")){
+            lbltipot.setText("-");
+            lbltipoa.setText("-");
+            cmbproduto.setVisible(false);
+            cmbaviamento.setVisible(false);
+            cmbnula.setVisible(true);
+            cmbproduto.setSelectedIndex(0);
+            cmbaviamento.setSelectedIndex(0);
+            
+        }
+    }//GEN-LAST:event_cmptipoItemStateChanged
+    
+    private void btnsairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsairActionPerformed
+// TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btnsairActionPerformed
+    
+    private void btnlimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlimparActionPerformed
+// TODO add your handling code here:
+        
+        
+        txtmetro.setText("0.00");
+        txtkilo.setText("0.00");
+        txtpeca.setText("0");
+        
+        GrupoMedida.clearSelection();
+        buttonGroup1.clearSelection();
+        
+        
+        rdbmetro.setSelected(false);
+        rdbkilo.setSelected(false);
+        rdbpeca.setSelected(false);
+        
+        txtkilo.setEnabled(false);
+        txtpeca.setEnabled(false);
+        txtmetro.setEnabled(false);
+        txtkilo.setEnabled(false);
+        txtpeca.setEnabled(false);
+        
+        cmptipo.setSelectedIndex(0);
+        cmbtamanho.setSelectedIndex(0);
+        cmbcor.setSelectedIndex(0);
+        cmptipo.requestFocus();
+    }//GEN-LAST:event_btnlimparActionPerformed
+    
+    
+    
+    private void btncadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncadastrarActionPerformed
+// TODO add your handling code here:
+        if(cmptipo.getSelectedItem().equals("Tecido")){
+            try {
+                
+                double estoqueatual = qtdestoquetinha +  Double.parseDouble(txtmetro.getText());
+                double estoqueatual1 = qtdestoquetinha1 +  Double.parseDouble(txtkilo.getText());
+                String sqlinsertsaldo = "Update SaldoMateriaPrima set qt_metro= '"+estoqueatual+"',"+
+                        "qt_kilo= '"+estoqueatual1+"',"+
+                        "nm_tamanho='"+(cmbtamanho.getSelectedItem().toString().toUpperCase())+"'where cd_tecido ='"+Integer.parseInt(lblcodproduto.getText())+"' " +
+                        "and cd_cor = '"+Integer.parseInt(lblcodcor.getText())+"' ";
+                con_saldo.statement.executeUpdate(sqlinsertsaldo);
+                con_saldo.executeSQL("select * from saldomateriaprima");
+                
+                JOptionPane.showMessageDialog(null,"Gravação realizado com sucesso!");
+                
+                txtmetro.setText("0.00");
+                txtkilo.setText("0.00");
+                txtpeca.setText("0");
+                txtkilo.setEnabled(false);
+                txtpeca.setEnabled(false);
+                txtmetro.setEnabled(false);
+                cmbcor.setSelectedIndex(0);
+                cmbproduto.setSelectedIndex(0);
+                cmptipo.setSelectedIndex(0);
+                cmbtamanho.setSelectedIndex(0);
+                GrupoMedida.clearSelection();
+                cmptipo.requestFocus();
+                qtdestoquetinha=0;
+                qtdestoquetinha1=0;
+                qtdestoquetinha2=0;
+                qtdestoquetinha3=0;
+              
+                
+                
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if(cmptipo.getSelectedItem().equals("Aviamento")){
+            try {
+                
+                double estoqueatual2 = qtdestoquetinha2 +  Double.parseDouble(txtmetro.getText());
+                int estoqueatual3 = qtdestoquetinha3 +  Integer.parseInt(txtpeca.getText());
+                //JOptionPane.showMessageDialog(null,qtdestoquetinha2);
+                //JOptionPane.showMessageDialog(null,qtdestoquetinha3);
+                String sqlinsertsaldo1 = "Update SaldoMateriaPrima set qt_metro= '"+estoqueatual2+"',"+
+                        "qt_peca= '"+estoqueatual3+ "'where cd_aviamento ='"+Integer.parseInt(lblcodaviamento.getText())+"' " +
+                        "and cd_cor = '"+Integer.parseInt(lblcodcor.getText())+"' and nm_tamanho= '" +cmbtamanho.getSelectedItem().toString().toUpperCase()+"'";
+                con_saldo.statement.executeUpdate(sqlinsertsaldo1);
+                con_saldo.executeSQL("select * from saldomateriaprima");
+                //JOptionPane.showMessageDialog(null, sqlinsertsaldo1);
+                JOptionPane.showMessageDialog(null,"Gravação realizado com sucesso!");
+                
+                txtmetro.setText("0.00");
+                txtkilo.setText("0.00");
+                txtpeca.setText("0");
+                txtkilo.setEnabled(false);
+                txtpeca.setEnabled(false);
+                txtmetro.setEnabled(false);
+                cmbcor.setSelectedIndex(0);
+                cmbproduto.setSelectedIndex(0);
+                cmptipo.setSelectedIndex(0);
+                GrupoMedida.clearSelection();
+                cmptipo.requestFocus();
+                cmbtamanho.setSelectedIndex(0);
+                qtdestoquetinha=0;
+                qtdestoquetinha1=0;
+                qtdestoquetinha2=0;
+                qtdestoquetinha3=0;
+              
+                
+                
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_btncadastrarActionPerformed
+    
+    private void txtpeca1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtpeca1KeyReleased
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtpeca1KeyReleased
+    
+    private void txtpeca1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtpeca1FocusGained
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtpeca1FocusGained
+    
+    private void txtkilo1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtkilo1KeyReleased
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtkilo1KeyReleased
+    
+    private void txtkilo1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtkilo1FocusGained
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtkilo1FocusGained
+    
+    private void txtmetro1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtmetro1KeyReleased
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtmetro1KeyReleased
+    
+    private void txtmetro1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtmetro1FocusGained
+// TODO add your handling code here:
+    }//GEN-LAST:event_txtmetro1FocusGained
+    
+    private void rdbpeca1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbpeca1ActionPerformed
+// TODO add your handling code here:
+    }//GEN-LAST:event_rdbpeca1ActionPerformed
+    
+    private void rdbkilo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbkilo1ActionPerformed
+// TODO add your handling code here:
+    }//GEN-LAST:event_rdbkilo1ActionPerformed
+    
+    private void rdbmetro1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rdbmetro1ItemStateChanged
+// TODO add your handling code here:
+    }//GEN-LAST:event_rdbmetro1ItemStateChanged
+    
+    private void txtpecaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtpecaFocusGained
+// TODO add your handling code here:
+        txtpeca.selectAll();
+    }//GEN-LAST:event_txtpecaFocusGained
+    
+    private void txtkiloFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtkiloFocusGained
+// TODO add your handling code here:
+        txtkilo.selectAll();
+    }//GEN-LAST:event_txtkiloFocusGained
+    
+    private void txtmetroFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtmetroFocusGained
+// TODO add your handling code here:
+        txtmetro.selectAll();
+    }//GEN-LAST:event_txtmetroFocusGained
+    
+    private void txtpecaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtpecaKeyReleased
+// TODO add your handling code here:
+        txtpeca.setText(txtpeca.getText().replace(",", "")
+        .replace(".", "").replace("q", "").replace("w", "")
+        .replace("e", "").replace("r", "").replace("t", "")
+        .replace("y", "").replace("u", "").replace("i", "")
+        .replace("o", "").replace("p", "").replace("´", "")
+        .replace("[", "").replace("a", "").replace("s", "")
+        .replace("d", "").replace("f", "").replace("g", "")
+        .replace("h", "").replace("j", "").replace("k", "")
+        .replace("l", "").replace("ç", "").replace("~", "")
+        .replace("]", "").replace("|", "").replace("z", "")
+        .replace("x", "").replace("c", "").replace("v", "")
+        .replace("b", "").replace("n", "").replace("m", "")
+        .replace(";", "").replace("<", "").replace(">", "")
+        .replace("/", "").replace("^", "").replace("}", "")
+        .replace("º", "").replace("{", "").replace("ª", "")
+        .replace("'", "").replace("!", "").replace("@", "")
+        .replace("$", "").replace("%", "").replace("¨", "")
+        .replace("&", "").replace("*", "").replace("(", "")
+        .replace(")", "").replace("+", "").replace("-", "")
+        .replace("_", "").replace(")", "").replace("#", "")
+        .replace("?", "").replace("°", ""));
+    }//GEN-LAST:event_txtpecaKeyReleased
+    
+    private void txtkiloKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtkiloKeyReleased
+// TODO add your handling code here:
+        txtkilo.setText(txtkilo.getText().replace(",", ".")
+        .replace("q", "").replace("w", "").replace("e", "")
+        .replace("r", "").replace("t", "").replace("y", "")
+        .replace("u", "").replace("i", "").replace("o", "")
+        .replace("p", "").replace("´", "").replace("[", "")
+        .replace("a", "").replace("s", "").replace("d", "")
+        .replace("f", "").replace("g", "").replace("h", "")
+        .replace("j", "").replace("k", "").replace("l", "")
+        .replace("ç", "").replace("~", "").replace("]", "")
+        .replace("|", "").replace("z", "").replace("x", "")
+        .replace("c", "").replace("v", "").replace("b", "")
+        .replace("n", "").replace("m", "").replace(";", "")
+        .replace("<", "").replace(">", "").replace("/", "")
+        .replace("^", "").replace("}", "").replace("º", "")
+        .replace("{", "").replace("ª", "").replace("'", "")
+        .replace("!", "").replace("@", "").replace("$", "")
+        .replace("%", "").replace("¨", "").replace("&", "")
+        .replace("*", "").replace("(", "").replace(")", "")
+        .replace("+", "").replace("-", "").replace("_", "")
+        .replace(")", "").replace("#", "").replace("?", "")
+        .replace("°", ""));
+    }//GEN-LAST:event_txtkiloKeyReleased
+    
+    private void txtmetroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtmetroKeyReleased
+// TODO add your handling code here:
+        
+        txtmetro.setText(txtmetro.getText().replace(",", ".")
+        .replace("q", "").replace("w", "").replace("e", "")
+        .replace("r", "").replace("t", "").replace("y", "")
+        .replace("u", "").replace("i", "").replace("o", "")
+        .replace("p", "").replace("´", "").replace("[", "")
+        .replace("a", "").replace("s", "").replace("d", "")
+        .replace("f", "").replace("g", "").replace("h", "")
+        .replace("j", "").replace("k", "").replace("l", "")
+        .replace("ç", "").replace("~", "").replace("]", "")
+        .replace("|", "").replace("z", "").replace("x", "")
+        .replace("c", "").replace("v", "").replace("b", "")
+        .replace("n", "").replace("m", "").replace(";", "")
+        .replace("<", "").replace(">", "").replace("/", "")
+        .replace("^", "").replace("}", "").replace("º", "")
+        .replace("{", "").replace("ª", "").replace("'", "")
+        .replace("!", "").replace("@", "").replace("$", "")
+        .replace("%", "").replace("¨", "").replace("&", "")
+        .replace("*", "").replace("(", "").replace(")", "")
+        .replace("+", "").replace("-", "").replace("_", "")
+        .replace(")", "").replace("#", "").replace("?", "")
+        .replace("°", ""));
+    }//GEN-LAST:event_txtmetroKeyReleased
+    
+    private void rdbpecaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbpecaActionPerformed
+// TODO add your handling code here:
+        if(rdbpeca.isSelected()){
+            
+            
+            
+            txtpeca.requestFocus();
+            txtkilo.setEnabled(false);
+            txtmetro.setText("0.00");
+            txtkilo.setText("0.00");
+            txtmetro.setEnabled(false);
+            txtpeca.setEnabled(true);
+        }
+    }//GEN-LAST:event_rdbpecaActionPerformed
+    
+    private void rdbkiloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbkiloActionPerformed
+// TODO add your handling code here:
+        if(rdbkilo.isSelected()){
+            
+            
+            txtkilo.requestFocus();
+            
+            txtmetro.setText("0.00");
+            txtpeca.setText("0");
+            txtkilo.setEnabled(true);
+            txtmetro.setEnabled(false);
+            txtpeca.setEnabled(false);
+        }
+        
+    }//GEN-LAST:event_rdbkiloActionPerformed
+    
+    private void rdbmetroItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rdbmetroItemStateChanged
+// TODO add your handling code here:
+        con_saldo = new conexao();
+        con_saldo.conecta();
+        con_saldo.executeSQL("select * from saldomateriaprima");
+        if(rdbmetro.isSelected()){
+            
+            
+            txtkilo.setText("0.00");
+            txtpeca.setText("0");
+            txtmetro.requestFocus();
+            txtmetro.setEnabled(true);
+            txtkilo.setEnabled(false);
+            txtpeca.setEnabled(false);
+        }
+        
+    }//GEN-LAST:event_rdbmetroItemStateChanged
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new EntradamateriaPrima().setVisible(true);
+            }
+        });
+    }
+    
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup GrupoMedida;
+    private java.awt.Button btncadastrar;
+    private java.awt.Button btnlimpar;
+    private java.awt.Button btnsair;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JComboBox cmbaviamento;
+    private javax.swing.JComboBox cmbcor;
+    private javax.swing.JComboBox cmbnula;
+    private javax.swing.JComboBox cmbproduto;
+    private javax.swing.JComboBox cmbtamanho;
+    private javax.swing.JComboBox cmptipo;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JLabel lblcodaviamento;
+    private javax.swing.JLabel lblcodcor;
+    private javax.swing.JLabel lblcodproduto;
+    private javax.swing.JLabel lbltipoa;
+    private javax.swing.JLabel lbltipot;
+    private javax.swing.JRadioButton rdbkilo;
+    private javax.swing.JRadioButton rdbkilo1;
+    private javax.swing.JRadioButton rdbmetro;
+    private javax.swing.JRadioButton rdbmetro1;
+    private javax.swing.JRadioButton rdbpeca;
+    private javax.swing.JRadioButton rdbpeca1;
+    private javax.swing.JTextField txtkilo;
+    private javax.swing.JTextField txtkilo1;
+    private javax.swing.JTextField txtkilo2;
+    private javax.swing.JTextField txtmetro;
+    private javax.swing.JTextField txtmetro1;
+    private javax.swing.JTextField txtmetro2;
+    private javax.swing.JTextField txtmetro3;
+    private javax.swing.JTextField txtpeca;
+    private javax.swing.JTextField txtpeca1;
+    private javax.swing.JTextField txtpeca2;
+    private javax.swing.JTextField txtpeca3;
+    // End of variables declaration//GEN-END:variables
+    
+}
